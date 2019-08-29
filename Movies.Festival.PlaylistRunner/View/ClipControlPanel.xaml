@@ -1,0 +1,135 @@
+﻿<UserControl x:Class="ak.oss.PlaylistRunner.View.ClipControlPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:converters="clr-namespace:ak.oss.PlaylistRunner.View.Converters"
+             xmlns:view="clr-namespace:ak.oss.PlaylistRunner.View"
+             mc:Ignorable="d" d:DesignHeight="120" d:DesignWidth="300" 
+             Name="root">
+
+    <UserControl.CommandBindings>
+        <CommandBinding Executed="CommandBinding_Executed" CanExecute="CommandBinding_CanExecute" Command="GoToPage"/>
+        <CommandBinding Executed="Mark_Click" Command="Replace"/>
+    </UserControl.CommandBindings>
+
+    <UserControl.Resources>
+        <converters:NotConverter x:Key="notConverter"/>
+        <converters:TimeSpanToDoubleConverter x:Key="timeSpanToDoubleConverter"/>
+        <converters:DoubleToTimeSpanConverter x:Key="doubleToTimeSpanConverter"/>
+        <converters:ScaleConverter x:Key="scaleConverter"/>
+
+        <Style TargetType="Button">
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.5"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="Slider" x:Key="timeSpanSliderStyle">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Slider">
+                        <Track Name="PART_Track">
+                            <Track.Thumb>
+                                <Thumb Name="PART_Thumb">
+                                    <Thumb.Template>
+                                        <ControlTemplate>
+
+                                            <Button Grid.Row="1"
+                                                    Command="GoToPage" CommandParameter="{Binding Value, RelativeSource={RelativeSource AncestorType=Slider}, Converter={StaticResource doubleToTimeSpanConverter}}">
+                                                <TextBlock Text="{Binding Value, RelativeSource={RelativeSource AncestorType=Slider}, StringFormat='{}עבור אל: {0:mm}:{0:ss}', Converter={StaticResource doubleToTimeSpanConverter}}"/>
+                                            </Button>
+                                        </ControlTemplate>
+                                    </Thumb.Template>
+                                </Thumb>
+                            </Track.Thumb>
+                        </Track>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <UniformGrid Columns="1" Grid.Row="0">
+            <ItemsControl ItemsSource="{Binding Marks}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <DockPanel LastChildFill="True"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button DockPanel.Dock="Left"  Background="Transparent" BorderThickness="2,0,0,0" BorderBrush="Green" Padding="0" Margin="0" HorizontalContentAlignment="Left"
+                            Content="{Binding Name}" ToolTip="{Binding Name}" Command="Replace" CommandParameter="{Binding}">
+                            <Button.Width>
+                                <MultiBinding Converter="{StaticResource scaleConverter}">
+                                    <Binding Path="Length" Converter="{StaticResource timeSpanToDoubleConverter}"/>
+                                    <Binding Path="Maximum" ElementName="slider"/>
+                                    <Binding Path="ActualWidth" ElementName="slider"/>
+                                </MultiBinding>
+                            </Button.Width>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Grid>
+                <ProgressBar Maximum="{Binding TotalTime, Converter={StaticResource timeSpanToDoubleConverter}}" 
+                         Value="{Binding Position, Converter={StaticResource timeSpanToDoubleConverter}}"
+                         IsEnabled="{Binding IsPlaying}"/>
+
+                <Slider Name="slider" Maximum="{Binding TotalTime, Converter={StaticResource timeSpanToDoubleConverter}}"
+                    VerticalAlignment="Center"/>
+
+                <TextBlock Name="timerText" Padding="5" HorizontalAlignment="Right" VerticalAlignment="Center" IsHitTestVisible="False" Opacity="0.5">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0:mm}:{0:ss}/{1:mm}:{1:ss}">
+                            <Binding Path="Position"/>
+                            <Binding Path="TotalTime"/>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                    <TextBlock.Background>
+                        <RadialGradientBrush>
+                            <GradientStop Color="#aaffffff"/>
+                            <GradientStop Color="Transparent" Offset="1"/>
+                        </RadialGradientBrush>
+                    </TextBlock.Background>
+                </TextBlock>
+            </Grid>
+
+            <Slider Style="{StaticResource timeSpanSliderStyle}" Value="{Binding Value, ElementName=slider}"
+                    Maximum="{Binding Maximum, ElementName=slider}"/>
+        </UniformGrid>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Height="40">
+            <Button Name="Backwards" Click="Backwards_Click" ToolTip="קפוץ קצת אחורה">
+                <Image Source="Bitmaps/button_black_rew.png" StretchDirection="DownOnly"/>
+            </Button>
+            <Button Name="Stop" Click="Stop_Click" ToolTip="עצור וחזור להתחלה">
+                <Image Source="Bitmaps/button_black_stop.png" StretchDirection="DownOnly"/>
+            </Button>
+            <Button Name="Reset" Click="Reset_Click" ToolTip="הפעל מהתחלה">
+                <Image Source="Bitmaps/button_black_first.png" StretchDirection="DownOnly"/>
+            </Button>
+            <Button Name="Pause" Click="Pause_Click" ToolTip="השהה" IsEnabled="{Binding IsPlaying, ElementName=root}">
+                <Image Source="Bitmaps/button_black_pause.png" StretchDirection="DownOnly"/>
+            </Button>
+            <Button Name="Play" Click="Play_Click" ToolTip="נגן"
+                IsEnabled="{Binding IsPlaying, ElementName=root, Converter={StaticResource notConverter}}">
+                <Image Source="Bitmaps/button_black_play.png" StretchDirection="DownOnly"/>
+            </Button>
+            <Button Name="Next" ToolTip="עבור לקליפ הבא" Command="{Binding NextClipCommand}">
+                <Image Source="Bitmaps/button_black_last.png" StretchDirection="DownOnly"/>
+            </Button>
+            <Button Name="Forward" Click="Forward_Click" ToolTip="קפוץ קצת קדימה">
+                <Image Source="Bitmaps/button_black_ffw.png" StretchDirection="DownOnly"/>
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

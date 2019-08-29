@@ -1,0 +1,223 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{EE744A1C-6494-4434-850E-0D0431B17CDB}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ak.oss.PlaylistRunner</RootNamespace>
+    <AssemblyName>PlaylistRunner</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EPPlus, Version=4.5.2.1, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.5.2.1\lib\net40\EPPlus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Services\ExcelPlaylistObtainer.cs" />
+    <Compile Include="Services\ExtensionToTypeConverter.cs" />
+    <Compile Include="Services\IPlaylistObtainer.cs" />
+    <Compile Include="Services\TextFilePlaylistObtainer.cs" />
+    <Compile Include="ViewModel\IClipProvider.cs" />
+    <Compile Include="ViewModel\IControlableClipPresenter.cs" />
+    <Compile Include="ViewModel\PlaylistViewModel.cs" />
+    <Compile Include="View\ClipControlPanel.xaml.cs">
+      <DependentUpon>ClipControlPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ClipPresenters\AudioPresenter.xaml.cs">
+      <DependentUpon>AudioPresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ClipPresenters\ClipPresenterFactory.cs" />
+    <Compile Include="View\ClipPresenters\ImagePresenter.xaml.cs">
+      <DependentUpon>ImagePresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ClipPresenters\NullClipPresenter.xaml.cs">
+      <DependentUpon>NullClipPresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ClipPresenters\VideoClipPresenter.xaml.cs">
+      <DependentUpon>VideoClipPresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ClipView.xaml.cs">
+      <DependentUpon>ClipView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Converters\BooleanConverters.cs" />
+    <Compile Include="View\Converters\IsEqualMultiConverter.cs" />
+    <Compile Include="View\Converters\NotNullConverter.cs" />
+    <Compile Include="View\Converters\PathToFileNameConverter.cs" />
+    <Compile Include="View\Converters\ScaleConverter.cs" />
+    <Compile Include="View\Converters\TimeSpanToDoubleConverter.cs" />
+    <Compile Include="View\DelegatingCommand.cs" />
+    <Compile Include="View\FormattedSlider.cs" />
+    <Compile Include="View\IClipPresenter.cs" />
+    <Compile Include="View\PlaylistControlView.xaml.cs">
+      <DependentUpon>PlaylistControlView.xaml</DependentUpon>
+    </Compile>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\Clip.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="View\ClipControlPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ClipPresenters\AudioPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ClipPresenters\ImagePresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ClipPresenters\NullClipPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ClipPresenters\VideoClipPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ClipView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\PlaylistControlView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Bitmaps\button_black_ffw.png" />
+    <Resource Include="View\Bitmaps\button_black_pause.png" />
+    <Resource Include="View\Bitmaps\button_black_play.png" />
+    <Resource Include="View\Bitmaps\button_black_rew.png" />
+    <Resource Include="View\Bitmaps\button_black_stop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Bitmaps\button_black_first.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Bitmaps\button_black_last.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Bitmaps\minimize.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Bitmaps\maximize.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Bitmaps\restore.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Bitmaps\Power.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Bitmaps\drag.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Bitmaps\Repeat.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Bitmaps\AudioIcon.png" />
+    <Resource Include="View\Bitmaps\camera-icon.png" />
+    <Resource Include="View\Bitmaps\video-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Bitmaps\Question-icon.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,89 @@
+﻿<Window x:Class="Movies.Festival.PlaylistRunner.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:view="clr-namespace:Movies.Festival.PlaylistRunner.View"
+        Title="MainWindow" Height="720" Width="576" Background="Black" Loaded="Window_Loaded" Name="root"
+        WindowStyle="None">
+
+    <Grid>
+        <view:ClipView x:Name="clipView" CrossfadeTime="{Binding CrossfadeTime}" CrossfadeReadyCommand="{Binding}" 
+                           CurrentClip="{Binding CurrentClip}" TotalTimeChanged="clipView_TotalTimeChanged" PositionChanged="clipView_PositionChanged"/>
+
+        <Border VerticalAlignment="Top" HorizontalAlignment="Stretch" Padding="0,0,0,20" Background="#01000000">
+
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Opacity" Value="0"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <StackPanel.Resources>
+                    <Style TargetType="Button">
+                        <Setter Property="Height" Value="50"/>
+                        <Setter Property="Width" Value="50"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <ContentControl Name="content" Content="{TemplateBinding Content}" Opacity="0.7" 
+                                                Height="{TemplateBinding Height}" Width="{TemplateBinding Width}"/>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="content" Property="Opacity" Value="1"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </StackPanel.Resources>
+
+                <Button Name="dragButton" >
+                    <Image Source="View/Bitmaps/drag.png" MouseDown="dragButton_MouseDown"/>
+                </Button>
+                
+                <Button Name="minimizeButton" Click="minimizeButton_Click">
+                    <Image Source="View/Bitmaps/minimize.png"/>
+                </Button>
+                
+                <Button Name="maxButton" Click="maxButton_Click">
+                    <Image>
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Setter Property="Source" Value="View/Bitmaps/maximize.png"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding WindowState, ElementName=root}" Value="Maximized">
+                                        <Setter Property="Source" Value="View/Bitmaps/restore.png"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                </Button>
+                
+                <Button Name="closeButton" Click="closeButton_Click">
+                    <Image Source="View/Bitmaps/Power.png"/>
+                </Button>
+                
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

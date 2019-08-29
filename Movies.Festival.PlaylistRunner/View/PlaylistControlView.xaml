@@ -1,0 +1,118 @@
+﻿<Window x:Class="ak.oss.PlaylistRunner.View.PlaylistControlView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:view="clr-namespace:ak.oss.PlaylistRunner.View"
+             xmlns:converters="clr-namespace:ak.oss.PlaylistRunner.View.Converters"
+             mc:Ignorable="d" d:DesignHeight="300" MaxHeight="800" Width="500" SizeToContent="Height" Name="root" Title="חלון שליטה">
+    <Window.Resources>
+        <converters:PathToFileNameConverter x:Key="pathToFilenameConverter"/>
+        <converters:IsEqualMultiConverter x:Key="isEqualsConverter"/>
+    </Window.Resources>
+    
+    <Window.InputBindings>
+        <KeyBinding Key="Space" Command="{Binding NextClipCommand}"/>
+    </Window.InputBindings>
+
+    <DockPanel>
+        <view:ClipControlPanel x:Name="controlPanel" DockPanel.Dock="Bottom"/>
+        <TextBlock Padding="5" DockPanel.Dock="Bottom" FlowDirection="RightToLeft"
+            Text="{Binding UpcomingClip.DisplayName, StringFormat='{}הקטע הבא: {0}'}"/>
+        <TextBlock Padding="5" DockPanel.Dock="Bottom" FlowDirection="RightToLeft"
+            Text="{Binding CurrentClip.DisplayName, StringFormat='{}הקטע הנוכחי: {0}'}"/>
+
+        <ListBox ItemsSource="{Binding Playlist}" SelectedItem="{Binding UpcomingClip}" Margin="5" AlternationCount="2"
+                 SelectionChanged="ListBox_SelectionChanged" Name="_listBox">
+            <ListBox.InputBindings>
+                <KeyBinding Key="Space" Command="{Binding NextClipCommand}"/>
+            </ListBox.InputBindings>
+            
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Style.Triggers>
+                        <!--alternate rows color-->
+                        <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                            <Setter Property="Background" Value="LightBlue"/>
+                        </Trigger>
+                        <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                            <Setter Property="Background" Value="#ffff99"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <DockPanel>
+                        <Label DockPanel.Dock="Right" FlowDirection="RightToLeft" BorderBrush="Green" BorderThickness="2"
+                               Padding="1" VerticalAlignment="Center" Margin="1" Name="playIcon" Visibility="Hidden">
+                            <Label.Background>
+                                <LinearGradientBrush EndPoint="0,1">
+                                    <GradientStop Offset="0" Color="LightGreen"/>
+                                    <GradientStop Offset="1" Color="#55ff55"/>
+                                </LinearGradientBrush>
+                            </Label.Background>
+                            מנגן...
+                        </Label>
+
+                        <Label DockPanel.Dock="Right" FlowDirection="RightToLeft" BorderBrush="Navy" BorderThickness="2"
+                               Padding="1" VerticalAlignment="Center" Margin="1" Name="nextIcon" Visibility="Hidden">
+                            <Label.Background>
+                                <LinearGradientBrush EndPoint="0,1">
+                                    <GradientStop Offset="0" Color="AliceBlue"/>
+                                    <GradientStop Offset="1" Color="LightBlue"/>
+                                </LinearGradientBrush>
+                            </Label.Background>
+                            הבא...
+                        </Label>
+                        
+                        <Image Name="loopImage" DockPanel.Dock="Right" Height="12" Source="Bitmaps/Repeat.png" Visibility="Hidden"
+                               UseLayoutRounding="True" SnapsToDevicePixels="True" VerticalAlignment="Center" Margin="0,2,0,0"/>
+                        
+                        <Image Name="typeImage" HorizontalAlignment="Center" DockPanel.Dock="Left" Height="12" Width="20" Source="Bitmaps/Question-icon.png"/>
+
+                        <TextBlock Padding="5" Text="{Binding DisplayName}" FlowDirection="RightToLeft"/>
+                    </DockPanel>
+                    <DataTemplate.Triggers>
+                        <!--mark current clip-->
+                        <DataTrigger Value="True">
+                            <DataTrigger.Binding>
+                                <MultiBinding Converter="{StaticResource isEqualsConverter}">
+                                    <Binding/>
+                                    <Binding ElementName="root" Path="DataContext.CurrentClip"/>
+                                </MultiBinding>
+                            </DataTrigger.Binding>
+                            <Setter TargetName="playIcon" Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                        <!--mark next clip-->
+                        <DataTrigger Value="True">
+                            <DataTrigger.Binding>
+                                <MultiBinding Converter="{StaticResource isEqualsConverter}">
+                                    <Binding/>
+                                    <Binding ElementName="root" Path="DataContext.UpcomingClip"/>
+                                </MultiBinding>
+                            </DataTrigger.Binding>
+                            <Setter TargetName="nextIcon" Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsLoop}" Value="True">
+                            <Setter TargetName="loopImage" Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+
+                        <DataTrigger Binding="{Binding Type}" Value="Video">
+                            <Setter TargetName="typeImage" Property="Source" Value="Bitmaps/video-icon.png"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Type}" Value="Image">
+                            <Setter TargetName="typeImage" Property="Source" Value="Bitmaps/camera-icon.png"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Type}" Value="Audio">
+                            <Setter TargetName="typeImage" Property="Source" Value="Bitmaps/AudioIcon.png"/>
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+
+        </ListBox>
+    </DockPanel>
+</Window>
